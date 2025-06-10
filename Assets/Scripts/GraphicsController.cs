@@ -1,11 +1,9 @@
-using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class GraphicsController : MonoBehaviour
+public class GraphicsController
 {
-
-    [SerializeField] float globalFloat = 1f;
+    float globalFloat = 1f;
     private MyData _myData;
     private ShaderProperties _properties;
 
@@ -14,15 +12,15 @@ public class GraphicsController : MonoBehaviour
         _properties = new ShaderProperties();
     }
 
-    void Update()
+    public void Execute(CommandBuffer cmd = null)
     {
         globalFloat = Time.time % 1f;
-        
-        // SetGlobalParameter();
-        PushConstantBuffer();
+     
+        // SetGlobalParameter(cmd);
+        PushConstantBuffer(cmd);
     }
     
-    void PushConstantBuffer()
+    void PushConstantBuffer(CommandBuffer cmd)
     {
         _myData._Float0 = globalFloat;
         _myData._Float1 = globalFloat;
@@ -524,30 +522,34 @@ public class GraphicsController : MonoBehaviour
         _myData._Float497 = globalFloat;
         _myData._Float498 = globalFloat;
         _myData._Float499 = globalFloat;
-        ConstantBuffer.PushGlobal(_myData, bufferID);
+
+        if (cmd == null)
+        {
+            ConstantBuffer.PushGlobal(_myData, bufferID);
+        }
+        else
+        {
+            ConstantBuffer.PushGlobal(cmd, _myData, bufferID);
+        }
     }
     
     static readonly int bufferID = Shader.PropertyToID("MyGlobalBuffer");
     
-    void SetGlobalParameter()
+    void SetGlobalParameter(CommandBuffer cmd)
     {
-        for (int i = 0; i < ShaderProperties.N; i++)
+        if (cmd == null)
         {
-            Shader.SetGlobalFloat(_properties.PropertyIds[i], globalFloat);
+            for (int i = 0; i < ShaderProperties.N; i++)
+            {
+                Shader.SetGlobalFloat(_properties.PropertyIds[i], globalFloat);
+            }
         }
-    }
-}
-
-public class ShaderProperties
-{
-    public const int N = 500;
-    public readonly int[] PropertyIds; 
-    public ShaderProperties()
-    {
-        PropertyIds = new int[N];
-        for (int i = 0; i < N; i++)
+        else
         {
-            PropertyIds[i] = Shader.PropertyToID($"_Float{i}");
+            for (int i = 0; i < ShaderProperties.N; i++)
+            {
+                cmd.SetGlobalFloat(_properties.PropertyIds[i], globalFloat);
+            }
         }
     }
 }
