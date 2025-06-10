@@ -5,19 +5,14 @@ public class GraphicsController
 {
     float globalFloat = 1f;
     private MyData _myData;
-    private ShaderProperties _properties;
-
-    private void Start()
-    {
-        _properties = new ShaderProperties();
-    }
+    private ShaderProperties _properties = new();
 
     public void Execute(CommandBuffer cmd = null)
     {
         globalFloat = Time.time % 1f;
      
-        // SetGlobalParameter(cmd);
-        PushConstantBuffer(cmd);
+        SetGlobalParameter(cmd);
+        // PushConstantBuffer(cmd);
     }
     
     void PushConstantBuffer(CommandBuffer cmd)

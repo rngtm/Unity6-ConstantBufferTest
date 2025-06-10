@@ -9,6 +9,8 @@ namespace Example
     {
         private CullingResults _cullingResults;
         
+        private GraphicsController _graphicsController;
+        
         // 描画したいShaderのLightModeタグ
         private readonly ShaderTagId[] _shaderTagIds = new ShaderTagId[]
         {
@@ -16,17 +18,24 @@ namespace Example
             new("UniversalForward"),
         };
 
+        public MyRenderPipeline()
+        {
+            _graphicsController = new GraphicsController();
+        }
+
         protected override void Render(ScriptableRenderContext context, List<Camera> cameras)
         {
             CommandBuffer cmd = CommandBufferPool.Get();
             cmd.Clear();
             
+            _graphicsController.Execute(cmd);
             foreach (Camera camera in cameras)
             {
                 context.SetupCameraProperties(camera);
-                cmd.ClearRenderTarget(true, true, Color.clear);
+                
+                cmd.ClearRenderTarget(true, true, Color.gray);
                 DrawOpaqueGeometry(context, camera, cmd);
-                DrawSky(context, camera, cmd);
+                // DrawSky(context, camera, cmd);
             }
             context.ExecuteCommandBuffer(cmd);
             context.Submit();

@@ -135,7 +135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &103937536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,8 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bcbdc60307ab4041a9010b9d2b4a102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  globalColor: {r: 0.1924392, g: 0.1924392, b: 0.1924392, a: 0.1924392}
-  globalFloat: 0.1924392
 --- !u!4 &103937537
 Transform:
   m_ObjectHideFlags: 0
